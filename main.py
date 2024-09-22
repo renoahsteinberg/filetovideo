@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
+
 import os
 import uuid
+import re
 
 
 class File:
@@ -13,21 +15,45 @@ class CreateImageFile(File):
     def __init__(self, file: File):
         self.file = file
 
-    def _get_file_header(self):
-        # uuid as seperator for filename.extension to ensure
-        # a certain degree of uniqueness,
-        # probability of breaking is minimized, i guess
+    def _create_file_header(self):
+        # UUID as separator for filename.extension to ensure uniqueness
         unique_id = uuid.uuid4()
         seperator = f'###UNIQUE_{unique_id}###'
-        encapsulated_data = f'{seperator}{self.file.name_ext}{seperator}IMFUCKINGTRED'
+        encapsulated_data = f'{seperator}{self.file.name_ext}{seperator}IMFUCKINGTIRED'
         return encapsulated_data.encode()
 
-    # just for testing and later usage 
+    def _file_to_bits(self):
+        pass
+
+    def _bits_to_colors(self):
+        pass
+
+    def _create_image(self):
+        pass
+
+    def _create_video(self):
+        pass
+
+    # Test and later use
     def _read_file_header_for_recreation(self):
-        data = self._get_file_header().decode()
-        file = data.split(data[:49])
-        # file[1] -> filename.extension
-        # file[2] -> file information
+        data = self._create_file_header().decode()
+        
+        pattern = r'###UNIQUE_([a-f0-9\-]{36})###(.*?)###UNIQUE_\1###(.*)'
+        
+        match = re.match(pattern, data)
+        
+        if match:
+            unique_id = match.group(1)
+            filename_ext = match.group(2)
+            file_info = match.group(3)
+
+            return {
+                'unique_id': unique_id,
+                'filename_ext': filename_ext,
+                'file_info': file_info
+                }
+        else:
+            raise ValueError('Header format is incorrect')
 
 
     def _read_file_binary(self):
@@ -37,26 +63,4 @@ class CreateImageFile(File):
 
 file_path = "/home/clay/projects/filetovideo/testfiles/testfile.txt"
 
-cfi = CreateImageFile(File(file_path))._read_file_header_for_recreation()
-
-
-
-
-
-
-
-
-"""
-class RecreateFile:
-    def recreate_file(file_destination):
-        # create path if not exist
-        if not os.path.exist(file_destination):
-            os.makedirs(file_destination)
-
-        # will be read from created file later on, just for now
-        new_file = os.path.join(file_destination, file_name_extension)
-
-        # create new file and write contents
-        with open(new_file, 'w') as f:
-            pass
-"""
+cfi = print(CreateImageFile(File(file_path))._read_file_header_for_recreation())

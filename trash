@@ -1,0 +1,12 @@
+class RecreateFile:
+    def recreate_file(file_destination):
+        # create path if not exist
+        if not os.path.exist(file_destination):
+            os.makedirs(file_destination)
+
+        # will be read from created file later on, just for now
+        new_file = os.path.join(file_destination, file_name_extension)
+
+        # create new file and write contents
+        with open(new_file, 'w') as f:
+            pass
