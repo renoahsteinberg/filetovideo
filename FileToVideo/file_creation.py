@@ -66,6 +66,7 @@ class CreateImageFile(File):
                             pixels[x + dx, y + dy] = bit
             
             images.append(image.convert('L'))
+            #image.save(f"{self.file.name_ext}_{_}.jpg","JPEG")
 
         return images
 
@@ -76,7 +77,7 @@ class CreateImageFile(File):
         images[0].save(
             f"{self.file.name_ext}.gif",
             save_all=True,
-            append_images=images[1:],
+            append_images=images,
             duration = 0.1 * 1000,
             loop=0
         )
